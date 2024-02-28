@@ -1,11 +1,13 @@
 package food.controller;
 
+import food.dto.FoodDto;
+import food.mapper.FoodMapper;
 import food.model.Food;
 import food.service.FoodDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -15,7 +17,8 @@ public class FoodController {
     private final FoodDataService foodService;
 
     @PostMapping("/save")
-    public Food save(@RequestBody Food food) {
+    public Food save(@RequestBody FoodDto foodDto) {
+        Food food = new FoodMapper().getFood(foodDto);
         return foodService.save(food);
     }
 
@@ -26,11 +29,11 @@ public class FoodController {
 
     @GetMapping("/findById")
     public Food findById(@RequestParam Long id) {
-        return foodService.findById(id).get();
+        return foodService.findById(id);
     }
 
     @GetMapping("/getAll")
-    public Collection<Food> getAll() {
+    public List<Food> getAll() {
         return foodService.findAll();
     }
 }

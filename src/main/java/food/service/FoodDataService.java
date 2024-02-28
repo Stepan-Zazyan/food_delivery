@@ -1,11 +1,11 @@
 package food.service;
 
+import food.error.FoodNotFoundException;
 import food.model.Food;
 import food.repository.FoodRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,21 +16,26 @@ public class FoodDataService {
     private final FoodRepository foodRepository;
 
     public Food save(Food food) {
-        return foodRepository.save(food);
+        return foodRepository.saveAndFlush(food);
     }
 
     public boolean update(Food food) {
-        Food foodToBeUpdated = foodRepository.findById(Math.toIntExact(food.getId())).get();
+        Food foodToBeUpdated = foodRepository.findById(food.getId()).get();
         foodToBeUpdated.setTitle(food.getTitle());
         foodToBeUpdated.setPrice(food.getPrice());
         return !foodToBeUpdated.equals(food);
     }
 
-    public Optional<Food> findById(Long id) {
-        return foodRepository.findById(Math.toIntExact(id));
+    public Food findById(Long id) {
+        Optional<Food> foodOptional = foodRepository.findById(id);
+        if (foodOptional.isPresent()) {
+            return foodOptional.get();
+        } else {
+            throw new FoodNotFoundException("Food not found with id: " + id);
+        }
     }
 
-    public Collection<Food> findAll() {
-        return (List<Food>) foodRepository.findAll();
+    public List<Food> findAll() {
+        return foodRepository.findAll();
     }
 }

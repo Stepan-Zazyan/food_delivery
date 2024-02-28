@@ -11,4 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FoodDto {
     private String foodTitle;
+    private double foodPrice;
+
 }
