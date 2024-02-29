@@ -38,4 +38,15 @@ public class FoodDataService {
     public List<Food> findAll() {
         return foodRepository.findAll();
     }
+
+    public void delete(Food food) {
+        foodRepository.delete(food);
+    }
+
+    public double getTotalPrice(List<Integer> listFoodIds) {
+        List<Food> listFood = foodRepository.findAllById(listFoodIds);
+        return listFood.stream()
+                .mapToDouble(Food::getPrice)
+                .sum();
+    }
 }
