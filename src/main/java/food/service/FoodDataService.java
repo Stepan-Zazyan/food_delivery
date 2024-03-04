@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -43,10 +44,11 @@ public class FoodDataService {
         foodRepository.delete(food);
     }
 
-    public double getTotalPrice(List<Integer> listFoodIds) {
+    public double getTotalPrice(Map<Long, Integer> foodIdsAndQuantity) {
+        List<Long> listFoodIds = foodIdsAndQuantity.keySet().stream().toList();
         List<Food> listFood = foodRepository.findAllById(listFoodIds);
         return listFood.stream()
-                .mapToDouble(Food::getPrice)
+                .mapToDouble(food -> food.getPrice() * foodIdsAndQuantity.get(food.getId()))
                 .sum();
     }
 }

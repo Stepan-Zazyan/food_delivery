@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -28,8 +29,8 @@ public class FoodController {
     }
 
     @GetMapping("/totalPrice")
-    public double getTotalPrice(List<Integer> listFoodIds) {
-        return foodService.getTotalPrice(listFoodIds);
+    public double getTotalPrice(Map<Long, Integer> foodIdsAndQuantity) {
+        return foodService.getTotalPrice(foodIdsAndQuantity);
     }
 
     @GetMapping("/getAll")
@@ -43,7 +44,7 @@ public class FoodController {
     }
 
     @DeleteMapping("/delete")
-    public void delete(Food food) {
+    public void delete(@RequestBody Food food) {
         foodService.delete(food);
     }
 
