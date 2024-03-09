@@ -5,11 +5,13 @@ import food.mapper.FoodMapper;
 import food.model.Food;
 import food.service.FoodDataService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping("/food")
@@ -20,6 +22,7 @@ public class FoodController {
     @PostMapping("/save")
     public Food save(@RequestBody FoodDto foodDto) {
         Food food = new FoodMapper().getFood(foodDto);
+        log.info("Сохранение еды:" + foodDto.getFoodTitle());
         return foodService.save(food);
     }
 
@@ -29,7 +32,7 @@ public class FoodController {
     }
 
     @GetMapping("/totalPrice")
-    public double getTotalPrice(Map<Long, Integer> foodIdsAndQuantity) {
+    public double getTotalPrice(@RequestBody Map<Long, Integer> foodIdsAndQuantity) {
         return foodService.getTotalPrice(foodIdsAndQuantity);
     }
 
@@ -38,15 +41,15 @@ public class FoodController {
         return foodService.findAll();
     }
 
+
     @PutMapping("/update")
-    public boolean update(@RequestBody Food food) {
-        return foodService.update(food);
+    public void update(@RequestBody Food food) {
+        foodService.update(food);
     }
 
     @DeleteMapping("/delete")
     public void delete(@RequestBody Food food) {
         foodService.delete(food);
     }
-
 
 }

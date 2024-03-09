@@ -5,6 +5,7 @@ import food.model.Food;
 import food.repository.FoodRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -20,11 +21,12 @@ public class FoodDataService {
         return foodRepository.saveAndFlush(food);
     }
 
-    public boolean update(Food food) {
+
+    public void update(Food food) {
         Food foodToBeUpdated = foodRepository.findById(food.getId()).get();
         foodToBeUpdated.setTitle(food.getTitle());
         foodToBeUpdated.setPrice(food.getPrice());
-        return !foodToBeUpdated.equals(food);
+        foodRepository.save(foodToBeUpdated);
     }
 
     public Food findById(Long id) {
@@ -46,7 +48,7 @@ public class FoodDataService {
 
     public double getTotalPrice(Map<Long, Integer> foodIdsAndQuantity) {
         List<Long> listFoodIds = foodIdsAndQuantity.keySet().stream().toList();
-        List<Food> listFood = foodRepository.findAllById(listFoodIds);
+        List<Food> listFood = foodRepository.findByIdIn(listFoodIds);
         return listFood.stream()
                 .mapToDouble(food -> food.getPrice() * foodIdsAndQuantity.get(food.getId()))
                 .sum();
